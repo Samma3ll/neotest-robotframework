@@ -1,9 +1,12 @@
 local lib = require("neotest.lib")
+local logger = require("neotest.logging")
 
 ---@class RobotframeworkNeotestAdapter
 local RobotframeworkNeotestAdapter = { name = "robotframework" }
 
 function RobotframeworkNeotestAdapter.discover_positions(path)
+	logger.info("RobotFramework adapter: discovering positions in " .. path)
+
 	local query = [[
     ;; Test Cases section
     (section
@@ -20,7 +23,9 @@ function RobotframeworkNeotestAdapter.discover_positions(path)
     (file) @file.definition
     ]]
 
-	return lib.treesitter.parse_positions(path, query, { nested_tests = true })
+	local positions = lib.treesitter.parse_positions(path, query, { nested_tests = true })
+	logger.info("RobotFramework adapter: found positions", positions)
+	return positions
 end
 
 return RobotframeworkNeotestAdapter
