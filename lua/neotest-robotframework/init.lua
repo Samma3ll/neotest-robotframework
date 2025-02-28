@@ -1,16 +1,32 @@
-local create_adapter = require("neotest-robotframework.adapter")
-
-local RobotframeworkNeotestAdapter = create_adapter({})
-
-setmetatable(RobotframeworkNeotestAdapter, {
-	__call = function(_, opts)
-		opts = opts or {}
-		return create_adapter({ min_init = opts.min_init })
+local adapter = {
+	name = "robotframework",
+	-- Required methods
+	is_test_file = function(file_path)
+		-- Return true if file_path is a test file
+		return vim.endswith(file_path, ".robot")
 	end,
-})
 
-RobotframeworkNeotestAdapter.setup = function(opts)
-	return RobotframeworkNeotestAdapter(opts)
+	find_positions = function(file_path)
+		-- Return test positions tree
+	end,
+
+	build_spec = function(args)
+		-- Return test run spec
+	end,
+
+	results = function(spec, result, tree)
+		-- Parse test results
+	end,
+
+	root = function(dir)
+		-- Return project root directory
+		-- Look for robot.conf or similar
+		return dir
+	end,
+}
+
+local create_adapter = function(opts)
+	return adapter
 end
 
-return RobotframeworkNeotestAdapter
+return create_adapter
