@@ -22,6 +22,10 @@ function adapter.is_test_file(file_path)
 	return vim.endswith(file_path, ".robot")
 end
 
+function adapter.new()
+	return adapter
+end
+
 function adapter.discover_positions(path)
 	logger.info("Discovering positions for Robot file: " .. path)
 
