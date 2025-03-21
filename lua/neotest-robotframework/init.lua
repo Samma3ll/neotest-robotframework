@@ -1,5 +1,5 @@
 -- ~/.config/nvim/lua/neotest-robotframework/init.lua
-
+print("ATTEMPTING TO LOAD ROBOT FRAMEWORK ADAPTER")
 local lib = require("neotest.lib")
 local logger = require("neotest.logging")
 logger.info("Loading Robot Framework adapter")
