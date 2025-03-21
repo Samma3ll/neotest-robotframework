@@ -50,11 +50,12 @@ function adapter.discover_positions(path)
 		-- Check for any section header (marks end of test section)
 		elseif line:match("^%s*%*%*%*") then
 			in_test_section = false
+			current_test_start = nil
 		-- Process potential test cases
 		elseif in_test_section then
 			-- Test cases start with non-whitespace
-			if line:match("^[^%s]") and not line:match("^%s*#") then
-				local test_name = line:match("^([^%s]+)")
+			if line:match("^[^%s]") and not line:match("^%s*#") and line:match("%S") then
+				local test_name = vim.trim(line)
 				if test_name then
 					logger.info("Found test: " .. test_name .. " at line " .. i)
 
