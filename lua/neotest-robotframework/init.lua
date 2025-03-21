@@ -2,12 +2,17 @@
 
 local lib = require("neotest.lib")
 local logger = require("neotest.logging")
+logger.info("Loading Robot Framework adapter")
 
 ---@type neotest.Adapter
 local adapter = { name = "robotframework" }
 
+function adapter.filter_dir(name)
+	return name ~= "node_modules"
+end
+
 function adapter.root(dir)
-	return dir
+	return lib.files.match_root_pattern("*.robot")(dir)
 end
 
 function adapter.is_test_file(file_path)
@@ -21,7 +26,7 @@ function adapter.discover_positions(path)
 	logger.info("Discovering positions for Robot file: " .. path)
 
 	-- Read file content
-	local content = lib.files.read_sync(path)
+	local content = lib.files.read(path)
 	local lines = vim.split(content, "\n")
 
 	-- Create position tree
@@ -102,18 +107,21 @@ function adapter.build_spec(args)
 	}
 end
 
-function adapter.results(spec, result, tree)
+function adapter.results(spec, result, _)
 	local status = result.code == 0 and "passed" or "failed"
 
 	-- Create output file
 	local output = "== Robot Framework Test Results ==\n\n"
 
-	if result.stdout and result.stdout ~= "" then
-		output = output .. "STDOUT:\n" .. result.stdout .. "\n\n"
+	local stdout = result.stdout and vim.trim(result.output) or ""
+	local stderr = result.stderr and vim.trim(result.stderr) or ""
+
+	if stdout ~= "" then
+		output = output .. "STDOUT:\n" .. stdout .. "\n\n"
 	end
 
-	if result.stderr and result.stderr ~= "" then
-		output = output .. "STDERR:\n" .. result.stderr .. "\n\n"
+	if stderr ~= "" then
+		output = output .. "STDERR:\n" .. stderr .. "\n\n"
 	end
 
 	-- Check for Robot output files
