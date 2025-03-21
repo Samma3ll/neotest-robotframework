@@ -84,7 +84,7 @@ function adapter.build_spec(args)
 	-- Add test filter if running specific test
 	if position.type == "test" then
 		table.insert(command, "--test")
-		table.insert(command, position.name)
+		table.insert(command, "*" .. position.name .. "*")
 	end
 
 	-- Add output options
