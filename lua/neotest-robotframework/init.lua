@@ -183,4 +183,9 @@ function RobotAdapter.results(spec, result, tree)
   return results
 end
 
+-- Add explicit factory function for neotest compatibility
+function RobotAdapter.new()
+  return RobotAdapter
+end
+
 return RobotAdapter
